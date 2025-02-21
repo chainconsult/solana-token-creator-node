@@ -22,18 +22,29 @@ import bs58 from 'bs58';
 import dotenv from 'dotenv';
 dotenv.config();
 
-let umi = createUmi(process.env.local_url, "confirmed");
-let connection = new Connection(process.env.local_url, "confirmed");
+// let umi = null;
+// let connection = null;
 
-if (process.env.network == "devnet"){
-  umi = createUmi(process.env.devnet_url);
-  connection = new Connection(process.env.devnet_url, "confirmed");
-} else if (process.env.network == "mainnet"){
-  umi = createUmi(process.env.mainnet_url);
-  connection = new Connection(process.env.mainnet_url, "confirmed");
+// if (process.env.network == "devnet"){
+//   umi = createUmi(process.env.devnet_url);
+//   connection = new Connection(process.env.devnet_url, "confirmed");
+// } else if (process.env.network == "mainnet"){
+//   umi = createUmi(process.env.mainnet_url);
+//   connection = new Connection(process.env.mainnet_url, "confirmed");
+// }else if (process.env.network == "local"){
+//   umi = createUmi(process.env.local_url);
+//   connection = new Connection(process.env.local_url, "confirmed");
+// }
+const isLocal = false;
+
+let umi = createUmi(process.env.devnet_url, "confirmed");
+let connection = new Connection(process.env.devnet_url, "confirmed");
+
+
+if(isLocal === "true"){
+  umi = createUmi("http://127.0.0.1:8899");
+  connection = new Connection("http://127.0.0.1:8899", "confirmed");
 }
-
-
 
 
 
@@ -74,6 +85,7 @@ const createToken = async () => {
         tokenDecimal
       );
       console.log("token mint address: " + mint.toBase58());
+
 
       const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
         process.env.token_metadata_program,
