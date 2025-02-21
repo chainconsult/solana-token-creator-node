@@ -124,7 +124,7 @@ const createToken = async () => {
       umi.use(mplTokenMetadata())
       
       //umi.use(keypairIdentity(initializeParams.keyPairAdmin));
-      if(!isLocal){
+      if(process.env.network !="local"){
         let myTransaction = await createMetadataAccountV3(
           umi,
           CreateMetadataAccountV3Args
