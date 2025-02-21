@@ -22,19 +22,7 @@ import bs58 from 'bs58';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// let umi = null;
-// let connection = null;
 
-// if (process.env.network == "devnet"){
-//   umi = createUmi(process.env.devnet_url);
-//   connection = new Connection(process.env.devnet_url, "confirmed");
-// } else if (process.env.network == "mainnet"){
-//   umi = createUmi(process.env.mainnet_url);
-//   connection = new Connection(process.env.mainnet_url, "confirmed");
-// }else if (process.env.network == "local"){
-//   umi = createUmi(process.env.local_url);
-//   connection = new Connection(process.env.local_url, "confirmed");
-// }
 const isLocal = false;
 
 let umi = createUmi(process.env.devnet_url, "confirmed");
@@ -69,23 +57,29 @@ const keyPairAdmin = Keypair.fromSecretKey(
 
 const createTokenMain = async() =>{
     let mintAddress = await createToken();
+    await createMetadata(mintAddress);
     console.log(mintAddress.toString());
     await mintTokens(mintAddress);
     await updateTokenAuthority(mintAddress);
 }
 
-const createToken = async () => {
+
+const createToken = async () =>{
+  let mint = await createMint(
+    connection,
+    keyPairAdmin,
+    keyPairAdmin.publicKey,
+    keyPairAdmin.publicKey,
+    tokenDecimal
+  );
+  console.log("token mint address: " + mint.toBase58());
+
+  return mint;
+}
+
+const createMetadata = async (mint) => {
 
     try {
-      let mint = await createMint(
-        connection,
-        keyPairAdmin,
-        keyPairAdmin.publicKey,
-        keyPairAdmin.publicKey,
-        tokenDecimal
-      );
-      console.log("token mint address: " + mint.toBase58());
-
 
       const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
         process.env.token_metadata_program,
@@ -123,11 +117,6 @@ const createToken = async () => {
         isMutable: true,
         collectionDetails: null,
       }
-
-      //image: https://bafybeiack6uusnienn36k24zcd3gay444piznz23dffwobcjgkogguravu.ipfs.w3s.link/aot.png
-// Metadata: https://bafybeiaj36ak3w7wqgmpmf2zwe2ornz372fnmy5iltfz3wu3wn7bycb3ui.ipfs.w3s.link/token-metadata.json
-
-
 
 
       const userWallet = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(adminSecretArray));
