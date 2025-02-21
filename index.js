@@ -96,7 +96,7 @@ const createToken = async () => {
         mint: mint,
         mintAuthority: keyPairAdmin.publicKey,
         payer: keyPairAdmin.publicKey,
-        updateAuthority: null,// keyPairAdmin.publicKey,
+        updateAuthority:  keyPairAdmin.publicKey,
         // & instruction data
         data: {
           name: process.env.token_name,
