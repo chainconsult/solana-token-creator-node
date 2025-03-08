@@ -23,16 +23,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-const isLocal = false;
+//const isLocal = false;
 
 let umi = createUmi(process.env.devnet_url, "confirmed");
 let connection = new Connection(process.env.devnet_url, "confirmed");
 
-
-if(isLocal === "true"){
-  umi = createUmi("http://127.0.0.1:8899");
-  connection = new Connection("http://127.0.0.1:8899", "confirmed");
+if (process.env.network === "mainnet-beta") {
+  umi = createUmi(process.env.mainnet_url, "confirmed");
+  connection = new Connection(process.env.mainnet_url, "confirmed");
+} else if (process.env.network === "local"){
+  umi = createUmi(process.env.local_url);
+  connection = new Connection(process.env.local_url, "confirmed");
 }
+
 
 
 
